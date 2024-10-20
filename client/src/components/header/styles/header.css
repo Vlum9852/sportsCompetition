@@ -1,0 +1,13 @@
+.header {
+    width: 100%;
+    height: 5%;
+    color: white;
+    background: linear-gradient(90deg,#040325,#110f45 calc(50% - 100px),
+    #110f45 calc(50% + 100px),#040325);
+    text-align: center;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .25));
+}
+
+.header-text {
+    padding-top: 1%;
+}
