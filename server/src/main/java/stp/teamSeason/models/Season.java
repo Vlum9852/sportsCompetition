@@ -3,7 +3,6 @@ package stp.teamSeason.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +14,9 @@ public class Season {
     @Id
     private Long id;
 
-//    @Column(name = "CompetitionName")
-//    private String competitionName;
-//
-//    @Column(name = "Year")
-//    private Short year;
+    @Column(name = "CompetitionName")
+    private String competitionName;
 
-
-
-
+    @Column(name = "YearEvent")
+    private Short year;
 }

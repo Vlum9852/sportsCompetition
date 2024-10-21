@@ -3,7 +3,6 @@ package stp.teamSeason.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +25,4 @@ public class Team {
 
     @Column(name = "FormationName")
     private Short formationName;
-
-
 }
