@@ -2,8 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import '../styles/cardTable.css';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { setCurrentCard } from '../../../stateManager/currentCard/currentCardSlice';
+import { TEAMS } from '../../../config/config';
+
 
 export default function CardTable({pData}) {
+    
     const [stRows, setRows] = useState();
     const rfIndex = useRef(0);
     const dispatch = useDispatch();
@@ -34,11 +37,16 @@ export default function CardTable({pData}) {
 }
 
 function CardTableRow({pData, pIndex, pSetIndex}) {
+    const currentSection = useSelector((state) => state.currentSection.value);
     const [stItems, setItems] = useState()
-
+    const nameKey = (section) => {
+        switch (section) {
+            case TEAMS: return "name";
+        }
+    }
     useLayoutEffect(() => {
         let index = pIndex.current;
-        let items = pData.map((item) => <CardTableItem pData={item.season} pIndex={index++} />);
+        let items = pData.map((item) => <CardTableItem pData={item[nameKey(currentSection)]} pIndex={index++} />);
         pIndex.current = index;
         setItems(items);
     }, [pData]);

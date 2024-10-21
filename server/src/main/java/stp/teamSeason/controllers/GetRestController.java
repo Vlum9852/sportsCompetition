@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import stp.teamSeason.models.Team;
 import stp.teamSeason.repository.TeamRepository;
 import org.springframework.web.bind.annotation.GetMapping;
+import stp.teamSeason.services.TeamService;
 
 
 @RestController
 @AllArgsConstructor
 public class GetRestController {
-    TeamRepository teamRepository;
+    TeamRepository teamRepository; //temp
+    TeamService teamService;
     @PostMapping("/set-team")
     public ResponseEntity<Team> createTeam() {
         Long tmp = 1L;
@@ -41,13 +43,7 @@ public class GetRestController {
 
     @GetMapping("/get-team")
     public ResponseEntity<List<Team>> getTeams() {
-        try {
-            List<Team> teams = teamRepository.findAll();
-            return new ResponseEntity<>(teams, HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
     }
 
 }

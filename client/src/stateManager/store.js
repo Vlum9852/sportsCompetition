@@ -3,6 +3,7 @@ import currentSectionReducer from './currentSection/currentSectionSlice';
 import currentCardReducer from './currentCard/currentCardSlice';
 import isVisibleModalWindowReducer from './isVisibleModalWindow/isVisibleModalWindowSlice';
 import modalWindowContentReducer  from './modalWindowContent/modalWindowContentSlice';
+import listTeamsReducer from './listTeams/listTeamsSlice';
 
 export default configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
         currentCard: currentCardReducer,
         isVisibleModalWindow: isVisibleModalWindowReducer,
         modalWindowContent: modalWindowContentReducer,
+        listTeams: listTeamsReducer,
     },
 });

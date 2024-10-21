@@ -16,10 +16,9 @@ import { setCurrentSection } from '../../../stateManager/currentSection/currentS
 import ModalWindow from '../../modalWindow/code/ModalWindow';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
+import { setListTeams } from '../../../stateManager/listTeams/listTeamsSlice';
+import { TEAMS, SEASONS, SEASON_SCHEDULE } from '../../../config/config';
 
-const SEASON_SCHEDULE = 'seasonSchedule';
-const TEAMS = 'teams';
-const SEASONS = 'seasons';
 
 const tempData = [
     {season: 'Кубок России'},
@@ -55,9 +54,7 @@ const tempDataSecond = [
 ]
 const tempDataеThird = [
     {season: 'Кубок России'},
-    {season: 'Кубок России по футзалу'},
-    {season: 'Суперкубок России'},
-    {season: 'Суперкубок России по футзалу'},
+
 ]
 
 export default function Main({}) {
@@ -103,7 +100,13 @@ function MainNav({}) {
                 <Nav.Item 
                     active={currentSection === TEAMS ? true : false} 
                     eventKey={TEAMS}
-                    onClick={() => {dispatch(setCurrentSection(TEAMS))}}
+                    onClick={async () => {
+                        const res = await fetch('/get-team');
+                        const json = await res.json();
+                        dispatch(setListTeams(json));
+                        dispatch(setCurrentSection(TEAMS));
+
+                    }}
                     >
                     Команды
                 </Nav.Item>
@@ -121,11 +124,11 @@ function MainNav({}) {
 
 function MainContent({}) {
     const currentSection = useSelector((state) => state.currentSection.value);
-
+    const listTeams = useSelector((state) => state.listTeams.value);
     return (
         <div className='main-content'>
             {(currentSection === SEASON_SCHEDULE) && <CardTable pData={tempData} />}
-            {(currentSection === TEAMS) && <CardTable pData={tempDataSecond} />}
+            {(currentSection === TEAMS) && <CardTable pData={listTeams} />}
             {(currentSection === SEASONS) && <CardTable pData={tempDataеThird} />}
         </div>
     );
