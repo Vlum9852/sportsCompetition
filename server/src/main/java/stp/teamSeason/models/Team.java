@@ -12,6 +12,7 @@ import lombok.*;
 @Table(name = "Team")
 public class Team {
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "Name")
@@ -25,4 +26,11 @@ public class Team {
 
     @Column(name = "FormationName")
     private Short formationName;
+
+    public Team(String name, String country, String image, Short formationName) {
+        this.name = name;
+        this.country = country;
+        this.image = image;
+        this.formationName = formationName;
+    }
 }

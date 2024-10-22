@@ -13,9 +13,19 @@ import java.util.List;
 @Service
 public class TeamService {
     TeamRepository teamRepository;
+
     public List<Team> getAllTeams() {
         try {
             return teamRepository.findAll();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    public boolean setTeam(Team teamReq) {
+        try {
+            Team team = teamRepository.save(teamReq);
+            return team != null ? true : false; 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
