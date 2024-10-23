@@ -46,7 +46,7 @@ function CardTableRow({pData, pIndex, pSetIndex}) {
     }
     useLayoutEffect(() => {
         let index = pIndex.current;
-        let items = pData.map((item) => <CardTableItem pData={item[nameKey(currentSection)]} pIndex={index++} />);
+        let items = pData.map((item) => <CardTableItem pData={{name : item[nameKey(currentSection)], image: item.image}} pIndex={index++} />);
         pIndex.current = index;
         setItems(items);
     }, [pData]);
@@ -62,7 +62,7 @@ function CardTableItem({pData, pIndex}) {
     const [stActive, setActive] = useState(false);
     const currentCard = useSelector((state) => state.currentCard.value);
     const dispatch = useDispatch();
-
+    const url = (src, index) => src + `?logoName=${index}`
     useEffect(() => {
         if (currentCard != pIndex) setActive(false);
     }, [currentCard]);
@@ -80,8 +80,10 @@ function CardTableItem({pData, pIndex}) {
                 setActive(!stActive);
             }}
         > 
-        <div className='card-table-item-image'></div>
-        <div className='card-table-item-text'>{pData}</div>
+        <div className='card-table-item-image'>
+            <img className='card-table-item-image-tag' src={url('/get-logo',  pData.image)}></img>
+        </div>
+        <div className='card-table-item-text'>{pData.name}</div>
         </div>
     );
 }

@@ -21,11 +21,16 @@
 }
 
 .card-table-item-image {
-    background-color: gray;
+    /* background-color: gray; */
     width: 130px;
     height: 107px;
     margin-left: 5px;
     margin-top: 5px;
+}
+
+.card-table-item-image-tag {
+    width: 130px;
+    height: 107px;
 }
 
 .card-table-item-text {
