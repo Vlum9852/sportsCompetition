@@ -1,0 +1,36 @@
+.change-season {
+    width: 100%;
+    height: 100%;
+}
+
+.change-season-header {
+    text-align: center;
+    width: 100%;
+    height: 10%;
+}
+
+.change-season-container {
+    width: 80%;
+    height: 90%;
+    margin-left: 10%;
+}
+
+.change-season-container-item {
+    margin-bottom: 5%;
+}
+
+.change-season-container-item-buttons {
+    width: 100%;
+    display: flex;
+    margin-top: 60px;
+}
+   
+.change-season-button-close {
+    margin-left: 10%;
+    width: 150px;
+}
+
+.change-season-button-add {
+    margin-left: 20%;
+    width: 150px;
+}

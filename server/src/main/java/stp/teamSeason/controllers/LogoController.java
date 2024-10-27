@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
-import stp.teamSeason.services.FileService;
+import stp.teamSeason.services.FileServices.FileService;
 
 
 
@@ -23,7 +23,7 @@ public class LogoController {
     @GetMapping(
     value = "/get-logo",
     produces = MediaType.IMAGE_JPEG_VALUE)
-    public @ResponseBody byte[] getLogo(@RequestParam String logoName) throws IOException   {
+    public @ResponseBody byte[] getLogo(@RequestParam("logoName") String logoName) throws IOException   {
         return fileService.getLogo(logoName);
     }
 }

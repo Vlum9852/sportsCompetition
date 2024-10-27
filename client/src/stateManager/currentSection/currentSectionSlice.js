@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const currentSectionSlice = createSlice({
     name: 'currentSection',
     initialState: {
-        value: 'seasonSchedule',
+        value: 'teams',
     },
     reducers: {
         setCurrentSection: (state, action) => {

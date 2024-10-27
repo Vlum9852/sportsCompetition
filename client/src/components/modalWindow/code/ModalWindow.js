@@ -2,15 +2,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import '../styles/modalWindow.css';
 import CloseIcon from '@rsuite/icons/Close';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
+import { useEffect, useState } from 'react';
 
-export default function ModalWindow() {
+const SMALL = 'SMALL';
+const DEFAULT = 'DEFAULT';
+
+export default function ModalWindow({pSize}) {
     const gstIsVisibleModalWindow = useSelector((state) => state.isVisibleModalWindow.value);
     const dispatch = useDispatch();
     const gstModalWindowContent = useSelector((state) => state.modalWindowContent.value);
+    const [stSizeClassName, setSizeClassName] = useState(String(pSize).toLowerCase()); 
+    
+    useEffect(() => {
+        setSizeClassName(String(pSize).toLowerCase());
+    }, [pSize]);
 
     return (
-        gstIsVisibleModalWindow && <div className='modal-window'>
-            <div className='modal-window-container'>
+        gstIsVisibleModalWindow && <div className={`modal-window-${stSizeClassName}`}>
+            <div className={`modal-window-container-${stSizeClassName}`}>
                 <CloseIcon 
                     className='modal-window-close'
                     onClick={() => {dispatch(setVisibleModal(false))}}

@@ -11,56 +11,48 @@ import CloseOutlineIcon from '@rsuite/icons/CloseOutline';
 import EditIcon from '@rsuite/icons/Edit';
 import CardTable from '../../cardTable/code/CardTable';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { setCurrentSection } from '../../../stateManager/currentSection/currentSectionSlice';
 import ModalWindow from '../../modalWindow/code/ModalWindow';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
 import { setListTeams } from '../../../stateManager/listTeams/listTeamsSlice';
+import { setListSeasons } from '../../../stateManager/listSeasons/listSeasonsSlice';
 import { TEAMS, SEASONS, SEASON_SCHEDULE } from '../../../config/config';
+import ChangeTeam from '../../changeTeam/code/ChangeTeam';
+import ChangeSeason from '../../changeSeason/code/ChangeSeason';
 
 
-const tempData = [
-    {season: 'Кубок России'},
-    {season: 'Кубок России по футзалу'},
-    {season: 'Суперкубок России'},
-    {season: 'Суперкубок России по футзалу'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-]
-
-const tempDataSecond = [
-    {season: 'Кубок России'},
-    {season: 'Кубок России по футзалу'},
-    {season: 'Суперкубок России'},
-    {season: 'Суперкубок России по футзалу'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-    {season: 'Лига легенд'},
-]
 const tempDataеThird = [
     {season: 'Кубок России'},
 
 ]
 
+const getTeams = async (dispatch) => {
+    const res = await fetch('/get-team');
+    const json = await res.json();
+    dispatch(setListTeams(json));
+    dispatch(setCurrentSection(TEAMS));
+}
+const getSeasons = async (dispatch) => {
+    const res = await fetch('/get-seasons');
+    const json = await res.json();
+    dispatch(setListSeasons(json));
+    dispatch(setCurrentSection(SEASONS));
+}
+
 export default function Main({}) {
+    const currentSection = useSelector((state) => state.currentSection.value);
     const dispatch = useDispatch();
+    const [stModalSize, setModalSize] = useState('DEFAULT');
+
+    useEffect(() => {
+        setModalSize(currentSection === TEAMS ? 'DEFAULT' : 'SMALL');
+    }, [currentSection]);
+
     useLayoutEffect(() => {
-        dispatch(setCurrentSection(SEASON_SCHEDULE));
+        getTeams(dispatch);
+        
     }, []);
 
     return (
@@ -69,7 +61,7 @@ export default function Main({}) {
                 <MainNav/>
                 <MainContent/>
                 <MainTools/>
-                <ModalWindow/>
+                <ModalWindow pSize={stModalSize}/>
             </MainConteiner>
         </div>
     );
@@ -90,21 +82,18 @@ function MainNav({}) {
     return (
         <div className='main-nav'>
             <Nav appearance='tabs' >
-                <Nav.Item 
+                {/* <Nav.Item 
                     active={currentSection === SEASON_SCHEDULE ? true : false} 
                     eventKey={SEASON_SCHEDULE}
                     onClick={() => {dispatch(setCurrentSection(SEASON_SCHEDULE))}}
                     >
                     Расписание сезонов
-                </Nav.Item>
+                </Nav.Item> */}
                 <Nav.Item 
                     active={currentSection === TEAMS ? true : false} 
                     eventKey={TEAMS}
                     onClick={async () => {
-                        const res = await fetch('/get-team');
-                        const json = await res.json();
-                        dispatch(setListTeams(json));
-                        dispatch(setCurrentSection(TEAMS));
+                        getTeams(dispatch);
 
                     }}
                     >
@@ -113,7 +102,7 @@ function MainNav({}) {
                 <Nav.Item 
                     active={currentSection === SEASONS ? true : false} 
                     eventKey={SEASONS}
-                    onClick={() => {dispatch(setCurrentSection(SEASONS))}}
+                    onClick={() => {getSeasons(dispatch)}}
                     >
                     Сезоны
                 </Nav.Item>
@@ -125,17 +114,22 @@ function MainNav({}) {
 function MainContent({}) {
     const currentSection = useSelector((state) => state.currentSection.value);
     const listTeams = useSelector((state) => state.listTeams.value);
+    const listSeasons = useSelector((state) => state.listSeasons.value);
     return (
         <div className='main-content'>
-            {(currentSection === SEASON_SCHEDULE) && <CardTable pData={tempData} />}
+            {/* {(currentSection === SEASON_SCHEDULE) && <CardTable pData={tempData} />} */}
             {(currentSection === TEAMS) && <CardTable pData={listTeams} />}
-            {(currentSection === SEASONS) && <CardTable pData={tempDataеThird} />}
+            {(currentSection === SEASONS) && <CardTable pData={listSeasons} />}
         </div>
     );
 }
 
 function MainTools({}) {
     const dispatch = useDispatch();
+    const currentSection = useSelector((state) => state.currentSection.value);
+    const currentCard = useSelector((state) => state.currentCard.value);
+
+    const currentCardCheck = value => value === -1 ? true : false;
 
     return (
         <div className='main-tools'>
@@ -145,14 +139,41 @@ function MainTools({}) {
                 size='xs' 
                 appearance='ghost'
                 onClick={() => {
-                    // dispatch(setModalContent(<div className='dskl'></div>));
+                    (currentSection === TEAMS) && dispatch(setModalContent(<ChangeTeam pAction={'ADD'}/>));
+                    (currentSection === SEASONS) && dispatch(setModalContent(<ChangeSeason pAction={'ADD'}/>));
                     dispatch(setVisibleModal(true));  
                 }}
             >
                 Добавить
             </IconButton>
-            <IconButton icon={<EditIcon/>} className='main-tools-button' size='xs' appearance='ghost'>Редактировать</IconButton>
-            <IconButton icon={<CloseOutlineIcon/>} className='main-tools-button' size='xs' appearance='ghost'>Удалить</IconButton>
+            <IconButton 
+                icon={<EditIcon/>} 
+                className='main-tools-button' 
+                size='xs' 
+                appearance='ghost'
+                disabled={currentCardCheck(currentCard)}
+                onClick={() => {
+                    (currentSection === TEAMS) && dispatch(setModalContent(<ChangeTeam pAction={'EDIT'}/>));
+                    (currentSection === SEASONS) && dispatch(setModalContent(<ChangeSeason pAction={'EDIT'}/>));
+                    dispatch(setVisibleModal(true));  
+                }}
+            >
+            Редактировать
+            </IconButton>
+            <IconButton 
+                icon={<CloseOutlineIcon/>} 
+                className='main-tools-button' 
+                size='xs' 
+                appearance='ghost'
+                disabled={currentCardCheck(currentCard)}
+                onClick={() => {
+                    (currentSection === TEAMS) && dispatch(setModalContent(<ChangeTeam pAction={'EDIT'}/>));
+                    (currentSection === SEASONS) && dispatch(setModalContent(<ChangeSeason pAction={'EDIT'}/>));
+                    dispatch(setVisibleModal(true));  
+                }}
+            >
+            Удалить
+            </IconButton>
         </div>
     );
 }

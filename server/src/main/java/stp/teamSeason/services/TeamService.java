@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class TeamService {
-    TeamRepository teamRepository;
+    private TeamRepository teamRepository;
 
     public List<Team> getAllTeams() {
         try {
