@@ -22,12 +22,6 @@ import { TEAMS, SEASONS, SEASON_SCHEDULE } from '../../../config/config';
 import ChangeTeam from '../../changeTeam/code/ChangeTeam';
 import ChangeSeason from '../../changeSeason/code/ChangeSeason';
 
-
-const tempDataеThird = [
-    {season: 'Кубок России'},
-
-]
-
 const getTeams = async (dispatch) => {
     const res = await fetch('/get-team');
     const json = await res.json();

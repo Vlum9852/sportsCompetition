@@ -47,7 +47,7 @@ function CardTableRow({pData, pIndex, pSetIndex}) {
     }
     useLayoutEffect(() => {
         let index = pIndex.current;
-        let items = pData.map((item) => <CardTableItem pData={{name : item[nameKey(currentSection)], image: item.image}} pIndex={index++} />);
+        let items = pData.map((item) => <CardTableItem pData={{name : item[nameKey(currentSection)], image: item.image}} pIndex={item.id} />);
         pIndex.current = index;
         setItems(items);
     }, [pData]);

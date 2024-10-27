@@ -12,8 +12,13 @@ import 'rsuite/Button/styles/index.css';
 import { Button } from 'rsuite';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import IconButton from 'rsuite/IconButton';
+import { useEffect, useState } from 'react';
 
 export default function ChangeTeam({pAction}) {
+
+    const [stDisableButton, setDisableButton] = useState(true);
+
+
 
     return (
         <div className='change-team'>
@@ -61,6 +66,7 @@ export default function ChangeTeam({pAction}) {
                         className='change-team-button-add' 
                         size='xs' 
                         appearance='primary'
+                        disabled={stDisableButton}
                     >
                     Добавить
                     </IconButton>
