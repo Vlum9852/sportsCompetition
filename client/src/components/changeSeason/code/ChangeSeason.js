@@ -19,6 +19,7 @@ import { setListSeasons } from '../../../stateManager/listSeasons/listSeasonsSli
 import { setCurrentSection } from '../../../stateManager/currentSection/currentSectionSlice';
 import { useDispatch } from 'react-redux';
 import { SEASONS } from '../../../config/config';
+import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 
 export default function ChangeSeason({pAction}) {
     const [stBody, setBody] = useState(
@@ -28,6 +29,9 @@ export default function ChangeSeason({pAction}) {
             image: '',
         }
     );
+
+    const [stFileList, setFileList] = useState([]);
+
     const [stDisableButton, setDisableButton] = useState(true);
     const placement = 'bottomEnd';
     const toaster = useToaster();
@@ -90,6 +94,8 @@ export default function ChangeSeason({pAction}) {
         });
         if (res.ok) {
             await getSeasons(dispatch);
+            setBody({...setBody, competitionName: '', yearEvent: '', image: ''});
+            setFileList([]);
             toaster.push(success, {placement});
             
         }
@@ -108,11 +114,12 @@ export default function ChangeSeason({pAction}) {
             <div className='change-season-container'>
                 <InputGroup className='change-season-container-item'>
                     <InputGroup.Addon>Название:</InputGroup.Addon>
-                    <Input onChange={onChangeNameHandler}/>
+                    <Input value={stBody.competitionName} onChange={onChangeNameHandler}/>
                 </InputGroup>
                 <InputGroup className='change-season-container-item'>
                     <InputGroup.Addon>Год проведения:</InputGroup.Addon>
-                    <InputNumber 
+                    <InputNumber
+                        value={stBody.yearEvent} 
                         onChange={onChangeYearHandler}
                         min={2000}
                         max={new Date().getFullYear()}
@@ -120,6 +127,8 @@ export default function ChangeSeason({pAction}) {
                 </InputGroup>
                 <InputGroup className='change-season-container-item-upload'>
                     <Uploader 
+                        fileList={stFileList}
+                        onChange={setFileList}
                         action="/upload-logo" 
                         draggable 
                         style={{ height: 60, width: 500}}
@@ -135,6 +144,7 @@ export default function ChangeSeason({pAction}) {
                         className='change-season-button-close' 
                         size='xs' 
                         appearance='ghost'
+                        onClick={() => {dispatch(setVisibleModal(false))}}
                     >
                     Отмена
                     </Button>

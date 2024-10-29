@@ -124,7 +124,12 @@ function MainTools({}) {
     const currentCard = useSelector((state) => state.currentCard.value);
 
     const currentCardCheck = value => value === -1 ? true : false;
-
+    const deleteHandler = async () => {
+        if (currentSection === SEASONS) {
+            await fetch(`/delete-season?id=${currentCard}`, {method: 'DELETE'});
+            getSeasons(dispatch);
+        }
+    }
     return (
         <div className='main-tools'>
             <IconButton 
@@ -160,12 +165,7 @@ function MainTools({}) {
                 size='xs' 
                 appearance='ghost'
                 disabled={currentCardCheck(currentCard)}
-                onClick={() => {
-                    (currentSection === TEAMS) && dispatch(setModalContent(<ChangeTeam pAction={'EDIT'}/>));
-                    (currentSection === SEASONS) && dispatch(setModalContent(<ChangeSeason pAction={'EDIT'}/>));
-                    dispatch(setVisibleModal(true));  
-                }}
-            >
+                onClick={deleteHandler}            >
             Удалить
             </IconButton>
         </div>

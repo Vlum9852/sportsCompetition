@@ -8,10 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import lombok.AllArgsConstructor;
+import stp.teamSeason.repository.SeasonRepository;
 
 import java.util.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.File;
 import java.io.FileInputStream;
 import org.apache.commons.io.IOUtils;
@@ -20,7 +24,7 @@ import org.apache.commons.io.IOUtils;
 @AllArgsConstructor
 public class FileService {
     private FilePath filePath;
-
+    private SeasonRepository seasonRepository;
     public byte[] getLogo(String logoName) throws IOException {
 
         InputStream in = null;
@@ -34,7 +38,24 @@ public class FileService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return in != null ? IOUtils.toByteArray(in) : null;
+        byte[] bytes = IOUtils.toByteArray(in); 
+        in.close();
+        return in != null ? bytes : null;
+    }
+
+    public void deleteLogoByName(String fileName) {
+        try {            
+            File removeFile = new File(filePath.getSaveDirPath() + filePath.getSepOS() + fileName);
+            if (removeFile.exists()) {
+                removeFile.delete();
+            } else {
+                throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Логотип отсутствует.");
+            }
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
     }
 
     public String uploadFile(MultipartFile file)  {
@@ -51,12 +72,17 @@ public class FileService {
             File uploadDir = new File(filePath.getSaveDirPath());
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
+                
             }
             
             String uuidFile = UUID.randomUUID().toString();
             resultFilename = uuidFile + "." + file.getOriginalFilename().split("\\.")[1];
             try {
-                file.transferTo(new File(filePath.getSaveDirPath() + filePath.getSepOS() + resultFilename));
+                //File saveFile = new File(filePath.getSaveDirPath() + filePath.getSepOS() + resultFilename);
+                
+                file.transferTo(Paths.get(filePath.getSaveDirPath() + filePath.getSepOS() + resultFilename));
+                
+                
             } catch (IOException ex) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, ex.getMessage()); // подумать о статусе ошибки
