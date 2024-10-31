@@ -49,8 +49,8 @@ public class FileService {
             if (removeFile.exists()) {
                 removeFile.delete();
             } else {
-                throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Логотип отсутствует.");
+                // throw new ResponseStatusException(
+                //     HttpStatus.BAD_REQUEST, "Логотип отсутствует.");
             }
         } catch (Exception ex) {
             throw new ResponseStatusException(

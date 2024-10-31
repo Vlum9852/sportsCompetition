@@ -150,7 +150,7 @@ function MainTools({}) {
                 className='main-tools-button' 
                 size='xs' 
                 appearance='ghost'
-                disabled={currentCardCheck(currentCard)}
+                disabled={currentCardCheck(currentCard)} 
                 onClick={() => {
                     (currentSection === TEAMS) && dispatch(setModalContent(<ChangeTeam pAction={'EDIT'}/>));
                     (currentSection === SEASONS) && dispatch(setModalContent(<ChangeSeason pAction={'EDIT'}/>));
@@ -165,7 +165,7 @@ function MainTools({}) {
                 size='xs' 
                 appearance='ghost'
                 disabled={currentCardCheck(currentCard)}
-                onClick={deleteHandler}            >
+                onClick={deleteHandler}>
             Удалить
             </IconButton>
         </div>

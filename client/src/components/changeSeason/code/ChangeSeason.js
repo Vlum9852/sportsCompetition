@@ -12,12 +12,12 @@ import 'rsuite/Button/styles/index.css';
 import { Button, Notification, useToaster } from 'rsuite';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import IconButton from 'rsuite/IconButton';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import 'rsuite/Notification/styles/index.css';
 import 'rsuite/useToaster/styles/index.css';
 import { setListSeasons } from '../../../stateManager/listSeasons/listSeasonsSlice';
 import { setCurrentSection } from '../../../stateManager/currentSection/currentSectionSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SEASONS } from '../../../config/config';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 
@@ -35,6 +35,8 @@ export default function ChangeSeason({pAction}) {
     const [stDisableButton, setDisableButton] = useState(true);
     const placement = 'bottomEnd';
     const toaster = useToaster();
+    const gstListSeasons = useSelector((state) => state.listSeasons.value);
+    const gstCurrentCard = useSelector((state) => state.currentCard.value);
     const dispatch = useDispatch();
     const checkBody = (body) => {
         if 
@@ -53,6 +55,14 @@ export default function ChangeSeason({pAction}) {
         setDisableButton(checkBody(stBody));
     }, [stBody]);
 
+    useLayoutEffect(() => {
+        if (pAction === 'EDIT') {
+            gstListSeasons.forEach(item => {
+                item.id === gstCurrentCard && setBody(item);
+            });
+        }
+    }, []);
+
     const onSuccesUploadHandler = (fileName) => {
         setBody({...stBody, image: fileName});
     }
@@ -67,7 +77,7 @@ export default function ChangeSeason({pAction}) {
 
     const success = (
         <Notification type="success" header="Успешно!" closable>
-            <p>Сезон добавлен!</p>
+            <p>{pAction === 'ADD' ? 'Сезон добавлен!' : 'Сезон изменен.'}</p>
         </Notification>
     );
 
@@ -96,6 +106,25 @@ export default function ChangeSeason({pAction}) {
             await getSeasons(dispatch);
             setBody({...setBody, competitionName: '', yearEvent: '', image: ''});
             setFileList([]);
+            toaster.push(success, {placement});
+            
+        }
+        else {
+            toaster.push(error, {placement});
+        }
+    }
+
+    const updateSeason = async () => {
+        const res = await fetch('/upd-season', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(stBody)
+        });
+        if (res.ok) {
+            await getSeasons(dispatch);
+            dispatch(setVisibleModal());
             toaster.push(success, {placement});
             
         }
@@ -154,7 +183,7 @@ export default function ChangeSeason({pAction}) {
                         size='xs' 
                         appearance='primary'
                         disabled={stDisableButton}
-                        onClick={addSeason}
+                        onClick={pAction === 'ADD' ? addSeason : updateSeason}
                     >
                     {pAction === 'ADD' ? 'Добавить' : 'Редактировать'}
                     </IconButton>

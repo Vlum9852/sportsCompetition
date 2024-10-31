@@ -3,6 +3,7 @@ package stp.teamSeason.services;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,6 +43,18 @@ public class SeasonService {
             seasonRepository.deleteById(id);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    public void updateSeason(@NonNull Season season) {
+        String logoName = seasonRepository.findImageById(season.getId());
+        if (!logoName.equals(season.getImage())) {
+            fileService.deleteLogoByName(logoName);
+        }
+        try {
+            seasonRepository.save(season);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }
