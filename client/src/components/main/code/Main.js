@@ -21,6 +21,7 @@ import { setListSeasons } from '../../../stateManager/listSeasons/listSeasonsSli
 import { TEAMS, SEASONS, SEASON_SCHEDULE } from '../../../config/config';
 import ChangeTeam from '../../changeTeam/code/ChangeTeam';
 import ChangeSeason from '../../changeSeason/code/ChangeSeason';
+import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
 
 const getTeams = async (dispatch) => {
     const res = await fetch('/get-team');
@@ -51,6 +52,7 @@ export default function Main({}) {
 
     return (
         <div className='main'>
+            {/* <AddTeamSeason/> */}
             <MainConteiner>
                 <MainNav/>
                 <MainContent/>

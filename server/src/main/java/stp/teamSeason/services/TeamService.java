@@ -22,10 +22,10 @@ public class TeamService {
         }
     }
 
-    public boolean setTeam(Team teamReq) {
+    public Team setTeam(Team teamReq) {
         try {
-            Team team = teamRepository.save(teamReq);
-            return team != null ? true : false; 
+            // Team team = teamRepository.save(teamReq);
+            return teamRepository.save(teamReq); 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }

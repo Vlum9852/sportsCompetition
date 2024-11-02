@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.*;
 import stp.teamSeason.models.Season;
 import stp.teamSeason.models.Team;
+import stp.teamSeason.models.TeamSeason;
 import stp.teamSeason.repository.TeamRepository;
 import stp.teamSeason.services.SeasonService;
+import stp.teamSeason.services.TeamSeasonService;
 import stp.teamSeason.services.TeamService;
 
 @RestController
@@ -17,8 +19,10 @@ import stp.teamSeason.services.TeamService;
 public class SetRestController {
     TeamService teamService;
     SeasonService seasonService;
+    TeamSeasonService teamSeasonService;
+
     @PostMapping("/set-team")
-    public boolean createTeam(@RequestBody Team teamReq) {
+    public Team createTeam(@RequestBody Team teamReq) {
         return teamService.setTeam(teamReq);
     }
 
@@ -26,5 +30,9 @@ public class SetRestController {
     public boolean createSeason(@RequestBody Season seasonReq) {
         return seasonService.setSeason(seasonReq);
     }
-    
+
+    @PostMapping("/set-team-season")
+    public TeamSeason setTeamSeason(@RequestBody TeamSeason teamSeasonReq) {
+        return  teamSeasonService.setTeamSeason(teamSeasonReq);
+    }
 }
