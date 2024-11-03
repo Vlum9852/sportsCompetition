@@ -21,7 +21,14 @@ import { TEAMS, TEAM_SEASON } from '../../../config/config';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
 
-
+const BODY_TEAM_SEASON_EMPTY = {
+    draw: '',
+    team: {},
+    season: {},
+    points: '',
+    win: '',
+    losses: '',
+}
 
 export default function ChangeTeam({pAction}) {
     const [stBody, setBody] = useState({
@@ -30,14 +37,7 @@ export default function ChangeTeam({pAction}) {
         image: '',
         formationName: '',
     });
-    const [stBodyTeamSeason, setBodyTeamSeason] = useState({
-        draw: '',
-        team: {},
-        season: {},
-        points: '',
-        win: '',
-        losses: '',
-    });
+    const [stBodyTeamSeason, setBodyTeamSeason] = useState(BODY_TEAM_SEASON_EMPTY);
     const [stFileList, setFileList] = useState([]);
     const [stDisableButton, setDisableButton] = useState(true);
     const placement = 'bottomEnd';
@@ -62,20 +62,22 @@ export default function ChangeTeam({pAction}) {
         return true;
     }
 
-    const checkBodyTeamSeason = () => {
+    const checkBodyTeamSeason = (body) => {
+        console.log(body);
         if 
         (
-            stBodyTeamSeason.draw !== '' &&
-            Object.keys(stBodyTeamSeason.team) !== 0 &&
-            Object.keys(stBodyTeamSeason.season) !== 0 &&
-            stBodyTeamSeason.points !== '' &&
-            stBodyTeamSeason.win !== '' &&
-            stBodyTeamSeason.losses !== '' 
+            body.draw === '' ||
+            // Object.keys(stBodyTeamSeason.team) !== 0 &&
+            Object.keys(body.season) === 0 ||
+            body.points === '' ||
+            body.win === '' ||
+            body.losses === '' 
         )
         {
-            return true;
+            return false;
         }
         return true;
+        // return JSON.stringify(stBodyTeamSeason) === JSON.stringify(BODY_TEAM_SEASON_EMPTY);
     } 
 
     useEffect(() => {
@@ -139,12 +141,13 @@ export default function ChangeTeam({pAction}) {
             body: JSON.stringify(stBody)
         });
         if (res.ok) {
-            const teamRes = await res.json();
+            // const teamRes = await res.json();
             // setBodyTeamSeason({...stBodyTeamSeason, team: teamRes});
-            if (checkBodyTeamSeason()) {
+            // console.log(checkBodyTeamSeason(stBodyTeamSeason));
+            // if (checkBodyTeamSeason(stBodyTeamSeason)) {
                 
-                await addTeamSeason(stBodyTeamSeason, teamRes);
-            }
+            //     await addTeamSeason(stBodyTeamSeason, teamRes);
+            // }
             await getTeams(dispatch);
             setBody(
                 {...stBody, 
@@ -154,6 +157,25 @@ export default function ChangeTeam({pAction}) {
                     formationName: ''
                 });
             setFileList([]);
+            toaster.push(success, {placement});
+            
+        }
+        else {
+            toaster.push(error, {placement});
+        }
+    }
+
+    const updTeam = async () => {
+        const res = await fetch('/upd-team', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(stBody)
+        });
+        if (res.ok) {
+            await getTeams(dispatch);
+            dispatch(setVisibleModal());
             toaster.push(success, {placement});
             
         }
@@ -212,10 +234,10 @@ export default function ChangeTeam({pAction}) {
                         </div>
                     </Uploader>
                 </InputGroup>
-                <InputGroup className='change-team-container-item-add-season' style={{width: 260}}>
+                {/* <InputGroup className='change-team-container-item-add-season' style={{width: 260}}>
                     <InputGroup.Addon>Участие в соревновании:</InputGroup.Addon>
                     <Button appearance='primary' size='sm' onClick={changeWindow}>Добавить</Button>
-                </InputGroup>
+                </InputGroup> */}
 
                 <div className='change-team-container-item-buttons'>
 
@@ -233,9 +255,9 @@ export default function ChangeTeam({pAction}) {
                         size='xs' 
                         appearance='primary'
                         disabled={stDisableButton}
-                        onClick={addTeam}
+                        onClick={pAction === 'ADD' ? addTeam : updTeam}
                     >
-                    Добавить
+                    {pAction === 'ADD' ? 'Добавить' : 'Редактировать'}
                     </IconButton>
                 </div>
             </div></> : 

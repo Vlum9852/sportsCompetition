@@ -130,6 +130,9 @@ function MainTools({}) {
         if (currentSection === SEASONS) {
             await fetch(`/delete-season?id=${currentCard}`, {method: 'DELETE'});
             getSeasons(dispatch);
+        } else {
+            await fetch(`/delete-team?id=${currentCard}`, {method: 'DELETE'});
+            getTeams(dispatch);
         }
     }
     return (

@@ -69,17 +69,25 @@ function CardTableItem({pData, pIndex}) {
         if (currentCard != pIndex) setActive(false);
     }, [currentCard]);
 
+    const setActiveCard = () => {
+        if (stActive) {
+            dispatch(setCurrentCard(-1));
+        }
+        else {
+            dispatch(setCurrentCard(pIndex));
+        }
+        setActive(!stActive);
+    }
+
     return (
         <div 
             className={stActive ? 'card-table-item-active' : 'card-table-item'}
             onClick={() => {
-                if (stActive) {
-                    dispatch(setCurrentCard(-1));
-                }
-                else {
-                    dispatch(setCurrentCard(pIndex));
-                }
-                setActive(!stActive);
+                setActiveCard();
+            }}
+            onDoubleClick={() => {
+                setActiveCard();
+                // to-do modal window
             }}
         > 
         <div className='card-table-item-image'>
