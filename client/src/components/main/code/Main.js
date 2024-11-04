@@ -22,6 +22,7 @@ import { TEAMS, SEASONS, SEASON_SCHEDULE } from '../../../config/config';
 import ChangeTeam from '../../changeTeam/code/ChangeTeam';
 import ChangeSeason from '../../changeSeason/code/ChangeSeason';
 import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
+import { InputPicker } from 'rsuite';
 
 const getTeams = async (dispatch) => {
     const res = await fetch('/get-team');
@@ -150,6 +151,22 @@ function MainTools({}) {
             >
                 Добавить
             </IconButton>
+            {
+                currentSection === TEAMS &&
+                <IconButton
+                    icon={<AddOutlineIcon/>} 
+                    className='main-tools-button' 
+                    size='xs' 
+                    appearance='ghost'
+                    disabled={currentCardCheck(currentCard)} 
+                    onClick={() => {
+                        dispatch(setModalContent(<AddTeamSeason/>));
+                        dispatch(setVisibleModal(true));  
+                    }}
+                >
+                    участие в сезоне
+                </IconButton>
+            }
             <IconButton 
                 icon={<EditIcon/>} 
                 className='main-tools-button' 

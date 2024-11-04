@@ -3,7 +3,7 @@ import '../styles/modalWindow.css';
 import CloseIcon from '@rsuite/icons/Close';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { useEffect, useState } from 'react';
-
+import { setCurrentCard } from '../../../stateManager/currentCard/currentCardSlice';
 const SMALL = 'SMALL';
 const DEFAULT = 'DEFAULT';
 
@@ -22,7 +22,7 @@ export default function ModalWindow({pSize}) {
             <div className={`modal-window-container-${stSizeClassName}`}>
                 <CloseIcon 
                     className='modal-window-close'
-                    onClick={() => {dispatch(setVisibleModal(false))}}
+                    onClick={() => {dispatch(setVisibleModal(false)); dispatch(setCurrentCard(-1))}}
                 />
                 {gstModalWindowContent}
             </div>

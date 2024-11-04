@@ -21,14 +21,34 @@
     margin-left: 25%;
 }
 
-.add-team-season-container-item, .add-team-season-container-item-picker {
+.add-team-season-container-item {
     margin-bottom: 5%;
     width: 60% !important;
 }
 
 .add-team-season-container-item-picker {
     width: 60% !important;
+    margin-bottom: 5%;
+    padding: 0;
 }
+
+.item-picker-addon {
+    width: 60px;
+    height: 32px;
+    border: solid 1px ;
+    border-color: #e5e5ea;
+    border-right: none;
+    /* vertical-align: middle; */
+    
+}
+
+.season-picker {
+    width: 100% !important;
+}
+
+/* .add-team-season-container-item-picker {
+    width: 60% !important;
+} */
 
 .add-team-season-button-close {
     margin-left: 5%;

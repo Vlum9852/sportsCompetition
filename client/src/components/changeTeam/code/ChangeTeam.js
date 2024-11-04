@@ -21,14 +21,7 @@ import { TEAMS, TEAM_SEASON } from '../../../config/config';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
 
-const BODY_TEAM_SEASON_EMPTY = {
-    draw: '',
-    team: {},
-    season: {},
-    points: '',
-    win: '',
-    losses: '',
-}
+
 
 export default function ChangeTeam({pAction}) {
     const [stBody, setBody] = useState({
@@ -37,7 +30,6 @@ export default function ChangeTeam({pAction}) {
         image: '',
         formationName: '',
     });
-    const [stBodyTeamSeason, setBodyTeamSeason] = useState(BODY_TEAM_SEASON_EMPTY);
     const [stFileList, setFileList] = useState([]);
     const [stDisableButton, setDisableButton] = useState(true);
     const placement = 'bottomEnd';
@@ -45,8 +37,8 @@ export default function ChangeTeam({pAction}) {
     const gstCurrentCard = useSelector((state) => state.currentCard.value);
     const gstListTeams = useSelector((state) => state.listTeams.value);
     const dispatch = useDispatch();
-    const [stWindow, setWindow] = useState(TEAMS);
-    const rfTeam = useRef(0);
+    // const [stWindow, setWindow] = useState(TEAMS);
+    // const rfTeam = useRef(0);
 
     const checkBody = (body) => {
         if 
@@ -62,23 +54,7 @@ export default function ChangeTeam({pAction}) {
         return true;
     }
 
-    const checkBodyTeamSeason = (body) => {
-        console.log(body);
-        if 
-        (
-            body.draw === '' ||
-            // Object.keys(stBodyTeamSeason.team) !== 0 &&
-            Object.keys(body.season) === 0 ||
-            body.points === '' ||
-            body.win === '' ||
-            body.losses === '' 
-        )
-        {
-            return false;
-        }
-        return true;
-        // return JSON.stringify(stBodyTeamSeason) === JSON.stringify(BODY_TEAM_SEASON_EMPTY);
-    } 
+
 
     useEffect(() => {
         setDisableButton(checkBody(stBody));
@@ -115,22 +91,9 @@ export default function ChangeTeam({pAction}) {
         dispatch(setCurrentSection(TEAMS));
     }
 
-    const changeWindow = (value = TEAMS) => setWindow(value);
+    // const changeWindow = (value = TEAMS) => setWindow(value);
 
-    const addTeamSeason = async (bodyReq, teamRes) => {
-        const res = await fetch('/set-team-season', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({...bodyReq, team: teamRes})
-        });
-        if (res.ok) {
 
-        } else {
-            toaster.push(error, {placement});
-        }
-    }
 
     const addTeam = async () => {
         const res = await fetch('/set-team', {
@@ -198,7 +161,7 @@ export default function ChangeTeam({pAction}) {
     
     return (
         <div className='change-team'>
-            { stWindow === TEAMS ? <><div className='change-team-header'>
+            <div className='change-team-header'>
                 {pAction === 'ADD' ? 
                 'Добавление команды' : 
                 'Редактирование команды'}
@@ -234,11 +197,6 @@ export default function ChangeTeam({pAction}) {
                         </div>
                     </Uploader>
                 </InputGroup>
-                {/* <InputGroup className='change-team-container-item-add-season' style={{width: 260}}>
-                    <InputGroup.Addon>Участие в соревновании:</InputGroup.Addon>
-                    <Button appearance='primary' size='sm' onClick={changeWindow}>Добавить</Button>
-                </InputGroup> */}
-
                 <div className='change-team-container-item-buttons'>
 
                     <Button 
@@ -260,12 +218,7 @@ export default function ChangeTeam({pAction}) {
                     {pAction === 'ADD' ? 'Добавить' : 'Редактировать'}
                     </IconButton>
                 </div>
-            </div></> : 
-            <AddTeamSeason 
-            pChangeWindow={changeWindow}
-            pBodyTeamSeason={stBodyTeamSeason} 
-                pSetBodyTeamSeason={setBodyTeamSeason}
-            />}
+            </div>
         </div>
     );
 }

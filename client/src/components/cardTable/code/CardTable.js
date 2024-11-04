@@ -3,7 +3,9 @@ import '../styles/cardTable.css';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { setCurrentCard } from '../../../stateManager/currentCard/currentCardSlice';
 import { SEASONS, TEAMS } from '../../../config/config';
-
+import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
+import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
+import ListTeamSeason from '../../listTeamSeason/code/listTeamSeason';
 
 export default function CardTable({pData}) {
     
@@ -62,6 +64,7 @@ function CardTableRow({pData, pIndex, pSetIndex}) {
 function CardTableItem({pData, pIndex}) {
     const [stActive, setActive] = useState(false);
     const currentCard = useSelector((state) => state.currentCard.value);
+    const currentSection = useSelector((state) => state.currentSection.value);
     const dispatch = useDispatch();
     const url = (src, index) => src + `?logoName=${index}`;
 
@@ -88,6 +91,10 @@ function CardTableItem({pData, pIndex}) {
             onDoubleClick={() => {
                 setActiveCard();
                 // to-do modal window
+                // if (currentSection === TEAMS) {
+                    dispatch(setModalContent(<ListTeamSeason/>));
+                    dispatch(setVisibleModal(true));
+                // }  
             }}
         > 
         <div className='card-table-item-image'>
