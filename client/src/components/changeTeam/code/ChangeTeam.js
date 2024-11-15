@@ -1,7 +1,6 @@
 import '../styles/changeTeam.css';
 import Input from 'rsuite/Input';
 import InputGroup from 'rsuite/InputGroup';
-import MaskedInput from 'rsuite/MaskedInput';
 import InputNumber from 'rsuite/InputNumber';
 import 'rsuite/InputNumber/styles/index.css';
 import 'rsuite/Input/styles/index.css';
@@ -9,18 +8,16 @@ import 'rsuite/InputGroup/styles/index.css';
 import Uploader from 'rsuite/Uploader';
 import 'rsuite/Uploader/styles/index.css';
 import 'rsuite/Button/styles/index.css';
-import { Button, useToaster, Notification } from 'rsuite';
+import { Button, useToaster } from 'rsuite';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import IconButton from 'rsuite/IconButton';
-import { useEffect, useState, useLayoutEffect, useRef } from 'react';
-import { useSearch } from 'rsuite/esm/internals/Picker';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setListTeams } from '../../../stateManager/listTeams/listTeamsSlice';
 import { setCurrentSection } from '../../../stateManager/currentSection/currentSectionSlice';
-import { TEAMS, TEAM_SEASON } from '../../../config/config';
+import { TEAMS } from '../../../config/config';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
-import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
-
+import { success, error } from '../../../common/common';
 
 
 export default function ChangeTeam({pAction}) {
@@ -37,8 +34,7 @@ export default function ChangeTeam({pAction}) {
     const gstCurrentCard = useSelector((state) => state.currentCard.value);
     const gstListTeams = useSelector((state) => state.listTeams.value);
     const dispatch = useDispatch();
-    // const [stWindow, setWindow] = useState(TEAMS);
-    // const rfTeam = useRef(0);
+
 
     const checkBody = (body) => {
         if 
@@ -85,18 +81,14 @@ export default function ChangeTeam({pAction}) {
     }
 
     const getTeams = async (dispatch) => {
-        const res = await fetch('/get-team');
+        const res = await fetch('/teams');
         const json = await res.json();
         dispatch(setListTeams(json));
         dispatch(setCurrentSection(TEAMS));
     }
 
-    // const changeWindow = (value = TEAMS) => setWindow(value);
-
-
-
     const addTeam = async () => {
-        const res = await fetch('/set-team', {
+        const res = await fetch('/teams/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -104,13 +96,6 @@ export default function ChangeTeam({pAction}) {
             body: JSON.stringify(stBody)
         });
         if (res.ok) {
-            // const teamRes = await res.json();
-            // setBodyTeamSeason({...stBodyTeamSeason, team: teamRes});
-            // console.log(checkBodyTeamSeason(stBodyTeamSeason));
-            // if (checkBodyTeamSeason(stBodyTeamSeason)) {
-                
-            //     await addTeamSeason(stBodyTeamSeason, teamRes);
-            // }
             await getTeams(dispatch);
             setBody(
                 {...stBody, 
@@ -120,16 +105,15 @@ export default function ChangeTeam({pAction}) {
                     formationName: ''
                 });
             setFileList([]);
-            toaster.push(success, {placement});
-            
+            toaster.push(success(pAction === 'ADD' ? 'Команда добавлена!' : 'Команда изменена.'), {placement});   
         }
         else {
-            toaster.push(error, {placement});
+            toaster.push(error('Одно из полей не было заполнено.'), {placement});
         }
     }
 
     const updTeam = async () => {
-        const res = await fetch('/upd-team', {
+        const res = await fetch('/teams', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -139,25 +123,15 @@ export default function ChangeTeam({pAction}) {
         if (res.ok) {
             await getTeams(dispatch);
             dispatch(setVisibleModal());
-            toaster.push(success, {placement});
+            toaster.push(success(pAction === 'ADD' ? 'Команда добавлена!' : 'Команда изменена.'), {placement});
             
         }
         else {
-            toaster.push(error, {placement});
+            toaster.push(error('Одно из полей не было заполнено.'), {placement});
         }
     }
 
-    const success = (
-        <Notification type="success" header="Успешно!" closable>
-            <p>{pAction === 'ADD' ? 'Команда добавлена!' : 'Команда изменена.'}</p>
-        </Notification>
-    );
 
-    const error = (
-        <Notification type="error" header="Ошибка!" closable>
-            <p>Одно из полей не было заполнено.</p>
-        </Notification>
-    );
     
     return (
         <div className='change-team'>
@@ -188,7 +162,7 @@ export default function ChangeTeam({pAction}) {
                     <Uploader 
                         fileList={stFileList}
                         onChange={setFileList}
-                        action="/upload-logo" 
+                        action="/logos/upload" 
                         draggable 
                         style={{ height: 60, width: 500}}
                         onSuccess={onSuccesUploadHandler}>

@@ -19,7 +19,7 @@ export default function CardTable({pData}) {
         let rows = [];
         for (let i = 0; i < pData.length; i++) {
             tempData.push(pData[i]);
-            if ((i + 1) % 6 == 0) {                
+            if ((i + 1) % 6 === 0) {                
                 rows.push(<CardTableRow pData={tempData} pIndex={rfIndex}/>);
                 tempData = [];
             }
@@ -38,7 +38,7 @@ export default function CardTable({pData}) {
 
 }
 
-function CardTableRow({pData, pIndex, pSetIndex}) {
+function CardTableRow({pData, pIndex}) {
     const currentSection = useSelector((state) => state.currentSection.value);
     const [stItems, setItems] = useState()
     const nameKey = (section) => {
@@ -49,7 +49,14 @@ function CardTableRow({pData, pIndex, pSetIndex}) {
     }
     useLayoutEffect(() => {
         let index = pIndex.current;
-        let items = pData.map((item) => <CardTableItem pData={{name : item[nameKey(currentSection)], image: item.image}} pIndex={item.id} />);
+        let items = pData.map((item) => 
+            <CardTableItem 
+                pData={{
+                    name : item[nameKey(currentSection)], 
+                    image: item.image
+                }} 
+                pIndex={item.id} 
+            />);
         pIndex.current = index;
         setItems(items);
     }, [pData]);
@@ -64,12 +71,11 @@ function CardTableRow({pData, pIndex, pSetIndex}) {
 function CardTableItem({pData, pIndex}) {
     const [stActive, setActive] = useState(false);
     const currentCard = useSelector((state) => state.currentCard.value);
-    const currentSection = useSelector((state) => state.currentSection.value);
     const dispatch = useDispatch();
-    const url = (src, index) => src + `?logoName=${index}`;
+    const url = (src, index) => src + `/${index}`;
 
     useEffect(() => {
-        if (currentCard != pIndex) setActive(false);
+        if (currentCard !== pIndex) setActive(false);
     }, [currentCard]);
 
     const setActiveCard = () => {
@@ -90,15 +96,12 @@ function CardTableItem({pData, pIndex}) {
             }}
             onDoubleClick={() => {
                 setActiveCard();
-                // to-do modal window
-                // if (currentSection === TEAMS) {
                     dispatch(setModalContent(<ListTeamSeason/>));
                     dispatch(setVisibleModal(true));
-                // }  
             }}
         > 
         <div className='card-table-item-image'>
-            <img className='card-table-item-image-tag' src={url('/get-logo',  pData.image)}></img>
+            <img className='card-table-item-image-tag' src={url('/logos',  pData.image)}></img>
         </div>
         <div className='card-table-item-text'>{pData.name}</div>
         </div>

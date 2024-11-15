@@ -33,7 +33,7 @@ public class TeamSeasonService {
         }
     }
 
-    public List<TeamSeason> getSeasonByTeamId(Long id) {
+    public List<TeamSeason> getSeasonsByTeamId(Long id) {
         try {
             Optional<Team> team = teamRepository.findById(id);
             if (team.isPresent()) {
@@ -46,7 +46,7 @@ public class TeamSeasonService {
         }
     }
 
-    public List<TeamSeason> getTeamBySeasonId(Long id) {
+    public List<TeamSeason> getTeamsBySeasonId(Long id) {
         try {
             Optional<Season> season = seasonRepository.findById(id);
             if (season.isPresent()) {

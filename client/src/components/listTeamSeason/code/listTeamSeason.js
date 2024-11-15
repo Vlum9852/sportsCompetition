@@ -17,8 +17,8 @@ export default function ListTeamSeason() {
 
     const request = async () => {
         return currentSection === TEAMS ?
-            await fetch(`/get-seasons-by-team?id=${currentCard}`) :
-            await fetch(`/get-teams-by-season?id=${currentCard}`);
+            await fetch(`/seasons/by-teams/${currentCard}`) :
+            await fetch(`/teams/by-seasons/${currentCard}`);
 
     }
 

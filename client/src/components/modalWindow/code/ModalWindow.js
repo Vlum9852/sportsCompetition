@@ -4,8 +4,6 @@ import CloseIcon from '@rsuite/icons/Close';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { useEffect, useState } from 'react';
 import { setCurrentCard } from '../../../stateManager/currentCard/currentCardSlice';
-const SMALL = 'SMALL';
-const DEFAULT = 'DEFAULT';
 
 export default function ModalWindow({pSize}) {
     const gstIsVisibleModalWindow = useSelector((state) => state.isVisibleModalWindow.value);

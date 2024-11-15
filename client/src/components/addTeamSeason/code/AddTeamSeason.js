@@ -1,12 +1,12 @@
 import { InputGroup, InputPicker, Input, Button, InputNumber, useToaster, Notification } from 'rsuite';
 import '../styles/addTeamSeason.css';
 import { useLayoutEffect, useState, useEffect } from 'react';
-import useData from 'rsuite/esm/InputPicker/hooks/useData';
 import { useDispatch, useSelector } from 'react-redux';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import IconButton from 'rsuite/IconButton';
-// import { setListSeasons } from '../../../stateManager/listSeasons/listSeasonsSlice';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
+import { success, error } from '../../../common/common';
+
 const BODY_TEAM_SEASON_EMPTY = {
     draw: '',
     team: {},
@@ -26,11 +26,9 @@ export default function AddTeamSeason({}) {
     const [stBodyTeamSeason, setBodyTeamSeason] = useState(BODY_TEAM_SEASON_EMPTY);
     const gstListTeams = useSelector((state) => state.listTeams.value);
     const gstCurrentCard = useSelector((state) => state.currentCard.value);
-
-    // const [stDisable, setDisable] = useState(true);
     const [stTeam, setTeam] = useState();
+
     useLayoutEffect (() => {
-        //getSeasons();
         gstListTeams.forEach(item => {
             item.id === gstCurrentCard && setTeam(item);
         });
@@ -41,18 +39,11 @@ export default function AddTeamSeason({}) {
         checkBodyTeamSeason(stBodyTeamSeason) && setDisable(false);
     }, [stBodyTeamSeason]);
 
-    const getSeasons = async () => {
-        const res = await fetch('/get-seasons');
-        const json = await res.json();
-        setDataPicker(json.map(item => ({label: item.competitionName, value: item})));
-    }
-
     const checkBodyTeamSeason = (body) => {
         console.log(body);
         if 
         (
             body.draw === '' ||
-            // Object.keys(stBodyTeamSeason.team) !== 0 &&
             Object.keys(body.season) === 0 ||
             body.points === '' ||
             body.win === '' ||
@@ -62,11 +53,10 @@ export default function AddTeamSeason({}) {
             return false;
         }
         return true;
-        // return JSON.stringify(stBodyTeamSeason) === JSON.stringify(BODY_TEAM_SEASON_EMPTY);
     } 
 
     const addTeamSeason = async (bodyReq, teamRes) => {
-        const res = await fetch('/set-team-season', {
+        const res = await fetch('/teams/add-season', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -75,24 +65,16 @@ export default function AddTeamSeason({}) {
         });
         if (res.ok) {
             setBodyTeamSeason(BODY_TEAM_SEASON_EMPTY);
-            toaster.push(success, {placement});
+            toaster.push(success('Добавлено участие в сезоне'), {placement});
         } else {
-            toaster.push(error, {placement});
+            toaster.push(error('Одно из полей не было заполнено.'), {placement});
         }
     }
 
 
-    const success = (
-        <Notification type="success" header="Успешно!" closable>
-            <p>{'Добавлено участие в сезоне'}</p>
-        </Notification>
-    );
 
-    const error = (
-        <Notification type="error" header="Ошибка!" closable>
-            <p>Одно из полей не было заполнено.</p>
-        </Notification>
-    );
+
+
 
     return ( 
         <div className='add-team-season'>

@@ -1,7 +1,6 @@
 import '../styles/changeSeason.css';
 import Input from 'rsuite/Input';
 import InputGroup from 'rsuite/InputGroup';
-import MaskedInput from 'rsuite/MaskedInput';
 import InputNumber from 'rsuite/InputNumber';
 import 'rsuite/InputNumber/styles/index.css';
 import 'rsuite/Input/styles/index.css';
@@ -9,7 +8,7 @@ import 'rsuite/InputGroup/styles/index.css';
 import Uploader from 'rsuite/Uploader';
 import 'rsuite/Uploader/styles/index.css';
 import 'rsuite/Button/styles/index.css';
-import { Button, Notification, useToaster } from 'rsuite';
+import { Button, useToaster } from 'rsuite';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import IconButton from 'rsuite/IconButton';
 import { useEffect, useLayoutEffect, useState } from 'react';
@@ -20,6 +19,8 @@ import { setCurrentSection } from '../../../stateManager/currentSection/currentS
 import { useDispatch, useSelector } from 'react-redux';
 import { SEASONS } from '../../../config/config';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
+import { success, error } from '../../../common/common';
+
 
 export default function ChangeSeason({pAction}) {
     const [stBody, setBody] = useState(
@@ -75,27 +76,16 @@ export default function ChangeSeason({pAction}) {
         setBody({...stBody, yearEvent: value});
     }
 
-    const success = (
-        <Notification type="success" header="Успешно!" closable>
-            <p>{pAction === 'ADD' ? 'Сезон добавлен!' : 'Сезон изменен.'}</p>
-        </Notification>
-    );
-
-    const error = (
-        <Notification type="error" header="Ошибка!" closable>
-            <p>Одно из полей не было заполнено.</p>
-        </Notification>
-    );
 
     const getSeasons = async (dispatch) => {
-        const res = await fetch('/get-seasons');
+        const res = await fetch('/seasons');
         const json = await res.json();
         dispatch(setListSeasons(json));
         dispatch(setCurrentSection(SEASONS));
     }
 
     const addSeason = async () => {
-        const res = await fetch('/set-season', {
+        const res = await fetch('/seasons/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -106,16 +96,16 @@ export default function ChangeSeason({pAction}) {
             await getSeasons(dispatch);
             setBody({...setBody, competitionName: '', yearEvent: '', image: ''});
             setFileList([]);
-            toaster.push(success, {placement});
+            toaster.push(success(pAction === 'ADD' ? 'Сезон добавлен!' : 'Сезон изменен.'), {placement});
             
         }
         else {
-            toaster.push(error, {placement});
+            toaster.push(error('Одно из полей не было заполнено.'), {placement});
         }
     }
 
     const updateSeason = async () => {
-        const res = await fetch('/upd-season', {
+        const res = await fetch('/seasons', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -125,11 +115,11 @@ export default function ChangeSeason({pAction}) {
         if (res.ok) {
             await getSeasons(dispatch);
             dispatch(setVisibleModal());
-            toaster.push(success, {placement});
+            toaster.push(success(pAction === 'ADD' ? 'Сезон добавлен!' : 'Сезон изменен.'), {placement});
             
         }
         else {
-            toaster.push(error, {placement});
+            toaster.push(error('Одно из полей не было заполнено.'), {placement});
         }
     }
 
@@ -158,7 +148,7 @@ export default function ChangeSeason({pAction}) {
                     <Uploader 
                         fileList={stFileList}
                         onChange={setFileList}
-                        action="/upload-logo" 
+                        action="/logos/upload" 
                         draggable 
                         style={{ height: 60, width: 500}}
                         onSuccess={onSuccesUploadHandler}

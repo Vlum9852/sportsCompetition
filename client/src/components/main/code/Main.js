@@ -3,7 +3,6 @@ import 'rsuite/Nav/styles/index.css';
 import 'rsuite/Button/styles/index.css';
 
 import Nav from 'rsuite/Nav';
-import Button from 'rsuite/Button';
 import IconButton from 'rsuite/IconButton';
 import 'rsuite/IconButton/styles/index.css';
 import AddOutlineIcon from '@rsuite/icons/AddOutline';
@@ -12,32 +11,17 @@ import EditIcon from '@rsuite/icons/Edit';
 import CardTable from '../../cardTable/code/CardTable';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { setCurrentSection } from '../../../stateManager/currentSection/currentSectionSlice';
 import ModalWindow from '../../modalWindow/code/ModalWindow';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
-import { setListTeams } from '../../../stateManager/listTeams/listTeamsSlice';
-import { setListSeasons } from '../../../stateManager/listSeasons/listSeasonsSlice';
-import { TEAMS, SEASONS, SEASON_SCHEDULE } from '../../../config/config';
+import { TEAMS, SEASONS } from '../../../config/config';
 import ChangeTeam from '../../changeTeam/code/ChangeTeam';
 import ChangeSeason from '../../changeSeason/code/ChangeSeason';
 import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
-import { InputPicker } from 'rsuite';
+import { useToaster } from 'rsuite';
+import { getTeams, getSeasons, error } from '../../../common/common';
 
-const getTeams = async (dispatch) => {
-    const res = await fetch('/get-team');
-    const json = await res.json();
-    dispatch(setListTeams(json));
-    dispatch(setCurrentSection(TEAMS));
-}
-const getSeasons = async (dispatch) => {
-    const res = await fetch('/get-seasons');
-    const json = await res.json();
-    dispatch(setListSeasons(json));
-    dispatch(setCurrentSection(SEASONS));
-}
-
-export default function Main({}) {
+export default function Main() {
     const currentSection = useSelector((state) => state.currentSection.value);
     const dispatch = useDispatch();
     const [stModalSize, setModalSize] = useState('DEFAULT');
@@ -53,7 +37,6 @@ export default function Main({}) {
 
     return (
         <div className='main'>
-            {/* <AddTeamSeason/> */}
             <MainConteiner>
                 <MainNav/>
                 <MainContent/>
@@ -72,26 +55,18 @@ function MainConteiner({children}) {
     );
 }
 
-function MainNav({}) {
+function MainNav() {
     const currentSection = useSelector((state) => state.currentSection.value);
     const dispatch = useDispatch();
 
     return (
         <div className='main-nav'>
             <Nav appearance='tabs' >
-                {/* <Nav.Item 
-                    active={currentSection === SEASON_SCHEDULE ? true : false} 
-                    eventKey={SEASON_SCHEDULE}
-                    onClick={() => {dispatch(setCurrentSection(SEASON_SCHEDULE))}}
-                    >
-                    Расписание сезонов
-                </Nav.Item> */}
                 <Nav.Item 
                     active={currentSection === TEAMS ? true : false} 
                     eventKey={TEAMS}
                     onClick={async () => {
                         getTeams(dispatch);
-
                     }}
                     >
                     Команды
@@ -108,32 +83,47 @@ function MainNav({}) {
     );
 }
 
-function MainContent({}) {
+function MainContent() {
+
     const currentSection = useSelector((state) => state.currentSection.value);
     const listTeams = useSelector((state) => state.listTeams.value);
     const listSeasons = useSelector((state) => state.listSeasons.value);
+
     return (
         <div className='main-content'>
-            {/* {(currentSection === SEASON_SCHEDULE) && <CardTable pData={tempData} />} */}
             {(currentSection === TEAMS) && <CardTable pData={listTeams} />}
             {(currentSection === SEASONS) && <CardTable pData={listSeasons} />}
         </div>
     );
 }
 
+
+
+
 function MainTools({}) {
     const dispatch = useDispatch();
     const currentSection = useSelector((state) => state.currentSection.value);
     const currentCard = useSelector((state) => state.currentCard.value);
-
+    const toaster = useToaster();
+    const placement = 'bottomEnd';
     const currentCardCheck = value => value === -1 ? true : false;
     const deleteHandler = async () => {
         if (currentSection === SEASONS) {
-            await fetch(`/delete-season?id=${currentCard}`, {method: 'DELETE'});
-            getSeasons(dispatch);
+            const res = await fetch(`/seasons/delete/${currentCard}`, {method: 'DELETE'});
+            if (res.ok) {
+                getSeasons(dispatch);
+            }
+            else {
+                toaster.push(error('невозможно совершить удаление'), {placement});
+            }
         } else {
-            await fetch(`/delete-team?id=${currentCard}`, {method: 'DELETE'});
-            getTeams(dispatch);
+            const res = await fetch(`/teams/delete/${currentCard}`, {method: 'DELETE'});
+            if (res.ok) {
+                getTeams(dispatch);
+            }
+            else {
+                toaster.push(error('невозможно совершить удаление'), {placement});
+            }
         }
     }
     return (

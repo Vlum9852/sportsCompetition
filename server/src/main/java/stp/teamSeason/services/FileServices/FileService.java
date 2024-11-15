@@ -25,7 +25,7 @@ import org.apache.commons.io.IOUtils;
 public class FileService {
     private FilePath filePath;
     private SeasonRepository seasonRepository;
-    public byte[] getLogo(String logoName) throws IOException {
+    public byte[] getLogo(String logoName) {
 
         InputStream in = null;
         File logoFile = null;
@@ -36,10 +36,18 @@ public class FileService {
             }
             
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        byte[] bytes = IOUtils.toByteArray(in); 
-        in.close();
+        byte[] bytes = new byte[0];
+        try {
+            bytes = IOUtils.toByteArray(in);
+            in.close();
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
         return in != null ? bytes : null;
     }
 
@@ -48,9 +56,6 @@ public class FileService {
             File removeFile = new File(filePath.getSaveDirPath() + filePath.getSepOS() + fileName);
             if (removeFile.exists()) {
                 removeFile.delete();
-            } else {
-                // throw new ResponseStatusException(
-                //     HttpStatus.BAD_REQUEST, "Логотип отсутствует.");
             }
         } catch (Exception ex) {
             throw new ResponseStatusException(
@@ -72,20 +77,14 @@ public class FileService {
             File uploadDir = new File(filePath.getSaveDirPath());
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
-                
             }
-            
             String uuidFile = UUID.randomUUID().toString();
             resultFilename = uuidFile + "." + file.getOriginalFilename().split("\\.")[1];
             try {
-                //File saveFile = new File(filePath.getSaveDirPath() + filePath.getSepOS() + resultFilename);
-                
                 file.transferTo(Paths.get(filePath.getSaveDirPath() + filePath.getSepOS() + resultFilename));
-                
-                
             } catch (IOException ex) {
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, ex.getMessage()); // подумать о статусе ошибки
+                        HttpStatus.BAD_REQUEST, ex.getMessage());
             }
         }
         return resultFilename;

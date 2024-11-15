@@ -16,7 +16,7 @@ import java.util.List;
 public class TeamService {
     private TeamRepository teamRepository;
     private FileService fileService;
-    public List<Team> getAllTeams() {
+    public List<Team> getTeams() {
         try {
             return teamRepository.findAll();
         } catch (Exception e) {
@@ -35,8 +35,9 @@ public class TeamService {
 
     public void deleteById(Long id) {
         try {
-            fileService.deleteLogoByName(teamRepository.findImageById(id));
+            String fileName = teamRepository.findImageById(id);
             teamRepository.deleteById(id);
+            fileService.deleteLogoByName(fileName);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }

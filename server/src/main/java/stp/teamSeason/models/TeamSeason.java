@@ -22,8 +22,8 @@ public class TeamSeason {
     @JoinColumn(name = "Team_id")
     private Team team;
 
-   @ManyToOne
-   @JoinColumn(name = "Season_id")
+    @ManyToOne
+    @JoinColumn(name = "Season_id")
     private Season season;
 
     @Column(name = "Points")

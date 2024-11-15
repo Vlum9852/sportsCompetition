@@ -19,7 +19,7 @@ public class SeasonService {
     private SeasonRepository seasonRepository;
     private FileService fileService;
 
-    public List<Season> getAllSeasons() {
+    public List<Season> getSeasons() {
         try {
             return seasonRepository.findAll();
         } catch (Exception e) {
@@ -28,10 +28,10 @@ public class SeasonService {
         }
     }
 
-    public boolean setSeason(Season seasonReq) {
+    public Season setSeason(Season seasonReq) {
         try {
             Season season = seasonRepository.save(seasonReq);
-            return season != null ? true : false; 
+            return season;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
@@ -39,8 +39,9 @@ public class SeasonService {
 
     public void deleteById(Long id) {
         try {
-            fileService.deleteLogoByName(seasonRepository.findImageById(id));
+            String fileName = seasonRepository.findImageById(id);
             seasonRepository.deleteById(id);
+            fileService.deleteLogoByName(fileName);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
