@@ -6,6 +6,8 @@ import AddOutlineIcon from '@rsuite/icons/AddOutline';
 import IconButton from 'rsuite/IconButton';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { success, error } from '../../../common/common';
+import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
+import ListTeamSeason from '../../listTeamSeason/code/ListTeamSeason';
 
 const BODY_TEAM_SEASON_EMPTY = {
     draw: '',
@@ -16,14 +18,14 @@ const BODY_TEAM_SEASON_EMPTY = {
     losses: '',
 }
 
-export default function AddTeamSeason({}) {
+export default function AddTeamSeason({pData, pAction}) {
     const dispatch = useDispatch();
     const [stDataPicker, setDataPicker] = useState();
     const [stDisable, setDisable] = useState(true);
     const gstListSeasons = useSelector((state) => state.listSeasons.value);
     const toaster = useToaster();
     const placement = 'bottomEnd';
-    const [stBodyTeamSeason, setBodyTeamSeason] = useState(BODY_TEAM_SEASON_EMPTY);
+    const [stBodyTeamSeason, setBodyTeamSeason] = useState(pData || BODY_TEAM_SEASON_EMPTY);
     const gstListTeams = useSelector((state) => state.listTeams.value);
     const gstCurrentCard = useSelector((state) => state.currentCard.value);
     const [stTeam, setTeam] = useState();
@@ -65,9 +67,14 @@ export default function AddTeamSeason({}) {
         });
         if (res.ok) {
             setBodyTeamSeason(BODY_TEAM_SEASON_EMPTY);
-            toaster.push(success('Добавлено участие в сезоне'), {placement});
+            const msg = pAction === 'EDIT' ? 'Изменено участие в сезоне' : 'Добавлено участие в сезоне'; 
+            toaster.push(success(msg), {placement});
         } else {
             toaster.push(error('Одно из полей не было заполнено.'), {placement});
+        }
+        if (pAction === 'EDIT') {
+            dispatch(setModalContent(<ListTeamSeason/>));
+            
         }
     }
 
@@ -79,10 +86,10 @@ export default function AddTeamSeason({}) {
     return ( 
         <div className='add-team-season'>
             <div className='add-team-season-header'>
-                Добавление сезона
+                {pAction !== 'EDIT' ? 'Добавление сезона' : 'Редактирование сезона'}
             </div>
             <div className='add-team-season-container'>
-                <div className='add-team-season-container-item-picker'>
+                {pAction !== 'EDIT' && <div className='add-team-season-container-item-picker'>
                     {/* <div className='item-picker-addon'>Сезон:</div> */}
                     <InputPicker 
                         className='season-picker' 
@@ -92,7 +99,7 @@ export default function AddTeamSeason({}) {
                         onChange={(value) => {
                         setBodyTeamSeason({...stBodyTeamSeason, season: value});
                     }}/>
-                </div>
+                </div>}
                 <InputGroup className='add-team-season-container-item'>
                     <InputGroup.Addon>Количество побед:</InputGroup.Addon>
                     <InputNumber 
@@ -141,7 +148,7 @@ export default function AddTeamSeason({}) {
                         disabled={stDisable}
                         onClick={() => {addTeamSeason(stBodyTeamSeason, stTeam)}}
                     >
-                    Добавить
+                    {pAction !== 'EDIT' ? 'Добавить' : 'Редактировать'}
                     </IconButton>
                 </div>
             </div>

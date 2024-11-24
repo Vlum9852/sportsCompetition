@@ -42,7 +42,7 @@ public class TeamController {
         teamService.updateTeam(teamReq);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteTeam(@PathVariable Long id) {
         teamService.deleteById(id);
 

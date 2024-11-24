@@ -38,7 +38,7 @@ public class SeasonController {
         seasonService.updateSeason(seasonReq);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteSeason(@PathVariable Long id) {
         seasonService.deleteById(id);
     }

@@ -2,8 +2,10 @@ import { useLayoutEffect, useState } from 'react';
 import '../styles/listTeamSeason.css';
 import "rsuite/Table/styles/index.css";
 import { Table } from 'rsuite';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TEAMS } from '../../../config/config';
+import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
+import AddTeamSeason from '../../addTeamSeason/code/AddTeamSeason';
 const { Column, HeaderCell, Cell } = Table;
 
 export default function ListTeamSeason() {
@@ -11,6 +13,7 @@ export default function ListTeamSeason() {
     const currentCard = useSelector((state) => state.currentCard.value);
     const currentSection = useSelector((state) => state.currentSection.value);
     const [stLoading, setLoading] = useState(true);
+    const dispatch = useDispatch();
     useLayoutEffect(() => {
         getData();
     }, []);
@@ -30,7 +33,17 @@ export default function ListTeamSeason() {
     } 
     return (
         <div className='list-team-season'>
-            <Table loading={stLoading} fillHeight  cellBordered data={stBody} disabledScroll>
+            <Table 
+                loading={stLoading} 
+                fillHeight  
+                cellBordered 
+                data={stBody} 
+                disabledScroll
+                onRowClick={(item) => {
+                    console.log(item);
+                    dispatch(setModalContent(<AddTeamSeason pData={item} pAction={'EDIT'}/>));
+                }}
+            >
                 <Column fullText  minWidth={300} width={300}  align="center" fixed>
                     <HeaderCell align='center'>
                         {currentSection === TEAMS ? 'Сезон' : 'Команда'}

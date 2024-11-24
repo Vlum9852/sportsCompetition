@@ -5,7 +5,7 @@ import { setCurrentCard } from '../../../stateManager/currentCard/currentCardSli
 import { SEASONS, TEAMS } from '../../../config/config';
 import { setModalContent } from '../../../stateManager/modalWindowContent/modalWindowContentSlice';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
-import ListTeamSeason from '../../listTeamSeason/code/listTeamSeason';
+import ListTeamSeason from '../../listTeamSeason/code/ListTeamSeason';
 
 export default function CardTable({pData}) {
     
@@ -101,7 +101,11 @@ function CardTableItem({pData, pIndex}) {
             }}
         > 
         <div className='card-table-item-image'>
-            <img className='card-table-item-image-tag' src={url('/logos',  pData.image)}></img>
+            {
+                (pData.image !== undefined && pData.image !== null && pData.image !== '') ?
+                <img className='card-table-item-image-tag' src={url('/logos',  pData.image)}></img> :
+                <></>
+            }
         </div>
         <div className='card-table-item-text'>{pData.name}</div>
         </div>

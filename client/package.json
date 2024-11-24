@@ -9,11 +9,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "client": "file:",
+    "country-list-js": "^3.1.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
     "react-scripts": "5.0.1",
     "rsuite": "^5.70.3",
+    "translate": "^3.0.1",
+    "use-react-countries": "^2.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

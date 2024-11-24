@@ -43,8 +43,8 @@ export default function ChangeSeason({pAction}) {
         if 
         (
             body.competitionName !== '' &&
-            body.yearEvent !== '' &&
-            body.image !== ''
+            body.yearEvent !== '' 
+            // body.image !== ''
         )
         {
             return false;
@@ -152,6 +152,7 @@ export default function ChangeSeason({pAction}) {
                         draggable 
                         style={{ height: 60, width: 500}}
                         onSuccess={onSuccesUploadHandler}
+                        onError={() => {setFileList([]); toaster.push(error('Неверный формат файла. Загрузите jpeg, jpg или png'), {placement});}}
                     >
                         <div style={{ height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <span style={{fontSize: 15}}>Щелкните или перетащите логотип в эту область для загрузки</span>

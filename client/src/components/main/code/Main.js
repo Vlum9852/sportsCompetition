@@ -109,7 +109,7 @@ function MainTools({}) {
     const currentCardCheck = value => value === -1 ? true : false;
     const deleteHandler = async () => {
         if (currentSection === SEASONS) {
-            const res = await fetch(`/seasons/delete/${currentCard}`, {method: 'DELETE'});
+            const res = await fetch(`/seasons/${currentCard}`, {method: 'DELETE'});
             if (res.ok) {
                 getSeasons(dispatch);
             }
@@ -117,7 +117,7 @@ function MainTools({}) {
                 toaster.push(error('невозможно совершить удаление'), {placement});
             }
         } else {
-            const res = await fetch(`/teams/delete/${currentCard}`, {method: 'DELETE'});
+            const res = await fetch(`/teams/${currentCard}`, {method: 'DELETE'});
             if (res.ok) {
                 getTeams(dispatch);
             }

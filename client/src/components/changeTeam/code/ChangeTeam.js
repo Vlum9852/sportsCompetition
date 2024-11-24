@@ -18,8 +18,12 @@ import { setCurrentSection } from '../../../stateManager/currentSection/currentS
 import { TEAMS } from '../../../config/config';
 import { setVisibleModal } from '../../../stateManager/isVisibleModalWindow/isVisibleModalWindowSlice';
 import { success, error } from '../../../common/common';
-
-
+import InputPicker from 'rsuite/InputPicker';
+import country from 'country-list-js';
+// (Optional) Import component styles. If you are using Less, import the `index.less` file. 
+import 'rsuite/InputPicker/styles/index.css';
+import { useCountries } from 'use-react-countries';
+import translate from 'translate';
 export default function ChangeTeam({pAction}) {
     const [stBody, setBody] = useState({
         name: '',
@@ -34,14 +38,41 @@ export default function ChangeTeam({pAction}) {
     const gstCurrentCard = useSelector((state) => state.currentCard.value);
     const gstListTeams = useSelector((state) => state.listTeams.value);
     const dispatch = useDispatch();
+    const [stCountries, setCountries] = useState();
+    const { countries } = useCountries()
+    
+    const setDataCounties = async () => {
+        let data = [];
+        // for (let i = 0; i < data.lenght; i++) {
+        //      console.log(await translate(countries[i].name, 'ru'))
+         
+        // }
+        countries.forEach(async item => {
+            let json = {
+                label: '',
+                value: ''
+            }
+            const name = await translate(item.name, 'ru');
 
+            json.label = name;
+            json.value = name;
+            data.push(json)
+        });
+        // const name = await translate(countries[0].name, 'ru');
+        // console.log(data);
+        setCountries(data);
+    }
+    // setDataCounties();
+    useEffect(() => {
+        setDataCounties();
+    }, []);
 
     const checkBody = (body) => {
         if 
         (
             body.name !== '' &&
             body.country !== '' &&
-            body.image !== '' &&
+            // body.image !== '' &&
             body.formationName !== '' 
         )
         {
@@ -147,7 +178,8 @@ export default function ChangeTeam({pAction}) {
                 </InputGroup>
                 <InputGroup className='change-team-container-item'>
                     <InputGroup.Addon>Страна:</InputGroup.Addon>
-                    <Input value={stBody.country} onChange={onChangeCountryHandler}/>
+                    {/* <Input value={stBody.country} onChange={onChangeCountryHandler}/> */}
+                    <InputPicker className='my-picker' value={stBody.country}  data={stCountries} onChange={onChangeCountryHandler} searchable/>
                 </InputGroup>
                 <InputGroup className='change-team-container-item'>
                     <InputGroup.Addon>Год формирования:</InputGroup.Addon>
@@ -165,10 +197,16 @@ export default function ChangeTeam({pAction}) {
                         action="/logos/upload" 
                         draggable 
                         style={{ height: 60, width: 500}}
+                        multiple={false}
+                        
+                    //     shouldQueueUpdate={(fileList, newFile) => {
+                    //  console.log(newFile);
+                    //       }}
                         onSuccess={onSuccesUploadHandler}>
                         <div style={{ height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <span>Щелкните или перетащите логотип в эту область для загрузки</span>
                         </div>
+                        
                     </Uploader>
                 </InputGroup>
                 <div className='change-team-container-item-buttons'>

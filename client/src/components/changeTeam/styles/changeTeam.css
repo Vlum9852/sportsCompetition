@@ -55,3 +55,7 @@
     margin-left: 20%;
     width: 150px;
 }
+
+.my-picker {
+    width: 100% !important;
+}
