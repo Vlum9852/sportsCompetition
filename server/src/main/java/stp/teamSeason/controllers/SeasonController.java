@@ -29,8 +29,8 @@ public class SeasonController {
     }
 
     @PostMapping("/add")
-    public void setSeason(@RequestBody Season seasonReq) {
-         seasonService.setSeason(seasonReq);
+    public ResponseEntity<Season> setSeason(@RequestBody Season seasonReq) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(seasonService.setSeason(seasonReq));
     }
 
     @PutMapping
