@@ -1,17 +1,15 @@
 package stp.teamSeason.controllers;
 
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import stp.teamSeason.models.Team;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class MainPageController {
-
-    @GetMapping("/api")
-    public String mainPage() {
-
+@RequestMapping("/api")
+public class MainController {
+    @GetMapping
+    public String getMainPage() {
         return "index";
     }
 }

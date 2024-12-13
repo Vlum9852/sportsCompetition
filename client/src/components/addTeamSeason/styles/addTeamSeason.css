@@ -1,0 +1,59 @@
+@import '../../../../node_modules/rsuite/InputPicker/styles/index.css';
+
+.add-team-season {
+    width: 100%;
+    height: 100%;
+}
+
+.rs-anim-fade  {
+    z-index: 99999 !important;
+}
+
+.add-team-season-header {
+    text-align: center;
+    width: 100%;
+    height: 10%;
+}
+
+.add-team-season-container {
+    width: 80%;
+    height: 90%;
+    margin-left: 25%;
+}
+
+.add-team-season-container-item {
+    margin-bottom: 5%;
+    width: 60% !important;
+}
+
+.add-team-season-container-item-picker {
+    width: 60% !important;
+    margin-bottom: 5%;
+    padding: 0;
+}
+
+.item-picker-addon {
+    width: 60px;
+    height: 32px;
+    border: solid 1px ;
+    border-color: #e5e5ea;
+    border-right: none;
+    /* vertical-align: middle; */
+    
+}
+
+.season-picker {
+    width: 100% !important;
+}
+
+/* .add-team-season-container-item-picker {
+    width: 60% !important;
+} */
+
+.add-team-season-button-close {
+    margin-left: 5%;
+}
+
+.add-team-season-button-add {
+    margin-left: 12%;
+}

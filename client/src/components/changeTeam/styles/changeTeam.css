@@ -1,0 +1,61 @@
+.change-team {
+    width: 100%;
+    height: 100%;
+    
+}
+
+.change-team-header {
+    text-align: center;
+    width: 100%;
+    height: 10%;
+}
+
+.change-team-container {
+    width: 80%;
+    height: 90%;
+    margin-left: 10%;
+}
+
+
+.change-team-container-item {
+    margin-bottom: 5%;
+}
+
+/* .rs-uploader-file-item-btn-remove  {
+    background-color: none !important;
+    border: none !important;
+    top: 9px !important;
+} */
+
+/* .change-team-container-item-add-season {
+    margin-bottom: 5%;
+    margin-left: 5px;
+    padding-top: 5%;
+} */
+
+.change-team-container-item-upload {
+    margin-bottom: 13%;
+}
+
+.change-team-container-item-add-season {
+    margin-bottom: 5%;
+} 
+
+.change-team-container-item-buttons {
+ width: 100%;
+ display: flex;
+}
+
+.change-team-button-close {
+    margin-left: 10%;
+    width: 150px;
+}
+
+.change-team-button-add {
+    margin-left: 20%;
+    width: 150px;
+}
+
+.my-picker {
+    width: 100% !important;
+}

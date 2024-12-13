@@ -35,3 +35,13 @@
     height: calc(100% - 65px);
     /* background-color: grey; */
 }
+
+.rs-btn-close, .rs-uploader-file-item-btn-remove {
+    color: none !important;
+    border: white !important;
+    background-color: none !important;
+}
+
+.rs-toast-provider, .rs-notification {
+    z-index: 99999 !important;
+}
